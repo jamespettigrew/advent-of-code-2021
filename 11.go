@@ -26,7 +26,7 @@ func (g *Grid) Print() {
 	fmt.Println("")
 }
 
-func (g *Grid) Step() (int, int) {
+func (g *Grid) Step() int {
 	flashes := 0
 	flashed := make(map[Point]bool)
 	flashQueue := make(chan Point, 100)
@@ -61,7 +61,7 @@ func (g *Grid) Step() (int, int) {
 				}
 			}
 		default:
-			return flashes, len(flashed)
+			return flashes
 		}
 	}
 }
@@ -113,8 +113,7 @@ func parseInput(filePath string) (Grid, error) {
 func p1(g Grid) int {
 	totalFlashes := 0
 	for i:= 0; i < 100; i++ {
-		flashes, _ := g.Step()
-		totalFlashes += flashes
+		totalFlashes += g.Step()
 	}
 
 	return totalFlashes
@@ -124,9 +123,9 @@ func p2(g Grid) int {
 	step := 0
 	for {
 		g.Print()
-		_, uniqueFlashes := g.Step()
+		flashes := g.Step()
 		step += 1
-		if uniqueFlashes == g.Width() * g.Height() {
+		if flashes == g.Width() * g.Height() {
 			return step
 		}
 	}
